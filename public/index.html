@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+</head>
+
+<body>
+    <h2>Calculator</h2>
+    <br/>
+    <label>Number 1</label>
+    <input type="number" id="number1">
+    <br/><br/>
+    <label>Operation</label>
+    <select id="operations">
+        <option>+</option>
+        <option>-</option>
+        <option>*</option>
+        <option>/</option>
+        <option>pow</option>
+    </select>
+    <br/><br/>
+    <label>Number 2</label>
+    <input type="number" id="number2">
+    <br/><br/>
+    <input type="submit" value="Calculate" onclick="calculate()">
+    <br/>
+    <h3 id="solution">Solution: </h3>
+    <input type="number" id="solutionField" readonly>
+</body>
+
+<script>
+    function calculate(){
+        const num1Field = document.getElementById('number1');
+        const num2Field = document.getElementById('number2');
+        const operationField = document.getElementById('operations');
+        const solutionField = document.getElementById('solutionField');
+
+
+        const data = {
+            num1: num1Field.value,
+            num2: num2Field.value,
+            op: operationField.value
+        };
+        const request = new XMLHttpRequest();
+        request.open('POST', 'http://localhost:3000/calculate');
+        request.setRequestHeader("Content-Type", "application/json");
+        request.send(JSON.stringify(data));
+        request.addEventListener('load', () => {
+            if(request.readyState === 4 && request.status === 200){
+                const responseJson = JSON.parse(request.responseText)
+                solutionField.value = parseFloat(responseJson.result);
+            }
+        });
+
+
+    }
+</script>
+</html>
